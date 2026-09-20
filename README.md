@@ -1,6 +1,6 @@
 # My portfolio
 
-This is my static portfolio, built with Astro. It covers my experience and education, my Lava-Prune MSc dissertation, and university projects involving video action recognition, statistical speech recognition, and vehicle re-identification.
+This is my static portfolio, built with Astro. It covers my experience and education, my Lava-Prune MSc dissertation, and university projects involving video action recognition and vehicle re-identification.
 
 ## Run locally
 
@@ -25,7 +25,6 @@ The static production site is written to `dist/` and can be deployed directly to
 - `/` — portfolio homepage
 - `/work/lava-prune` — dissertation case study
 - `/work/action-recognition` — Vision Transformer video project
-- `/work/speech-recognition` — HMM speech recognition project
 - `/work/vehicle-reidentification` — vehicle image-retrieval project
 
 The project figures and numerical claims come from my dissertation and university reports.
