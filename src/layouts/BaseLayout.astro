@@ -1,0 +1,54 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const currentPath = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#101210" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <a class="wordmark" href="/" aria-label="Daniel Davis, home">
+        <span>DD</span>
+        <span class="wordmark-name">Daniel Davis</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a class:list={[{ active: currentPath === '/' }]} href="/#work">Work</a>
+        <a href="/#about">About</a>
+        <a href="/#experience">Experience</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <p>Daniel Davis <span aria-hidden="true">—</span> software engineering, computer vision &amp; machine learning.</p>
+      <a href="#main">Back to top <span aria-hidden="true">↑</span></a>
+    </footer>
+    <script is:inline>
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add('is-visible');
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('[data-reveal]').forEach((element) => observer.observe(element));
+    </script>
+  </body>
+</html>

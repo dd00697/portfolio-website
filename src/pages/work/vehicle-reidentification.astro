@@ -1,0 +1,126 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Vehicle Re-identification — Daniel Davis" description="An individual computer-vision project exploring architectures, augmentation and hyperparameter tuning for vehicle image retrieval.">
+  <header class="case-hero shell">
+    <a class="back" href="/#work">← Back to selected work</a>
+    <div class="case-title-grid">
+      <div data-reveal>
+        <p class="eyebrow">University project · Deep learning</p>
+        <h1>Vehicle Re-identification</h1>
+        <p class="case-deck">Learning an embedding that can retrieve the same vehicle across cameras, even when viewpoint, lighting and occlusion change its appearance.</p>
+      </div>
+      <aside class="case-meta" data-reveal>
+        <div><span>Task</span><strong>Image retrieval</strong></div>
+        <div><span>Best backbone</span><strong>ResNet50-FC512</strong></div>
+        <div><span>Primary metric</span><strong>Mean average precision</strong></div>
+        <div><span>Context</span><strong>Individual university project</strong></div>
+      </aside>
+    </div>
+  </header>
+
+  <div class="article-shell">
+    <aside class="article-nav" aria-label="Case study contents">
+      <p>On this page</p>
+      <a href="#problem">The problem</a>
+      <a href="#pipeline">The pipeline</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#augmentation">Augmentation</a>
+      <a href="#tuning">Hyperparameters</a>
+      <a href="#outcome">Outcome</a>
+    </aside>
+
+    <article class="prose">
+      <section id="problem" data-reveal>
+        <p class="kicker">01 / The problem</p>
+        <h2>Finding identity without relying on one view.</h2>
+        <p class="lead">The same vehicle can look surprisingly different when it appears under another camera, angle or lighting condition.</p>
+        <p>Vehicle re-identification is an image-retrieval problem. Given one query image, the system ranks a gallery so that other images of the same vehicle appear near the top. Unlike ordinary classification, a useful system must learn an embedding where identity survives changes in viewpoint, illumination and occlusion.</p>
+        <p>The coursework explored the full experimental pipeline sequentially: selecting a backbone, testing augmentation, tuning learning rate and batch size, and comparing optimisers. Mean average precision (mAP) was the primary selection metric because it measures ranking quality across the complete gallery rather than only the first returned match.</p>
+      </section>
+
+      <section id="pipeline" data-reveal>
+        <p class="kicker">02 / The pipeline</p>
+        <h2>Classification and metric learning together.</h2>
+        <p>The data manager constructs separate training, query and gallery loaders. Training images receive stochastic transformations, while evaluation images use deterministic resizing and normalisation.</p>
+        <p>The network produces both vehicle-ID logits and feature embeddings. Cross-entropy supervises identity classification, while hard triplet loss pulls matching vehicles closer in the embedding space and pushes different identities apart. Evaluation computes pairwise Euclidean distances and ranks every gallery image for each query.</p>
+        <div class="callout"><p><strong>Evaluation:</strong> mAP measures the quality of the full ranked list; Rank-1 and Rank-5 record whether a correct identity appears within the first one or five results.</p></div>
+      </section>
+
+      <section id="architecture" data-reveal>
+        <p class="kicker">03 / Architecture</p>
+        <h2>Deeper is not automatically better.</h2>
+        <p>Three convolutional backbones were compared under the same initial training setup. ResNet50-FC512 produced the strongest embedding, improving mAP by 9.6 points over the lightweight MobileNetV3 baseline. VGG16 performed substantially worse despite its depth, showing the importance of residual optimisation and architecture choice.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Architecture</th><th>mAP</th><th>Rank-1</th><th>Rank-5</th></tr></thead>
+            <tbody>
+              <tr><td>MobileNetV3-Small</td><td>44.4%</td><td>80.1%</td><td>90.7%</td></tr>
+              <tr><td>ResNet50-FC512</td><td>54.0%</td><td>86.1%</td><td>94.0%</td></tr>
+              <tr><td>VGG16</td><td>18.1%</td><td>55.4%</td><td>68.0%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="augmentation" data-reveal>
+        <p class="kicker">04 / Augmentation</p>
+        <h2>Useful invariance has limits.</h2>
+        <p>Moderate perturbations helped the network rely on more robust evidence. Random erasing gave the best individual mAP at 54.7%, likely because masking local regions discourages dependence on one vehicle feature. Colour jitter produced the best Rank-1 result at 87.6%.</p>
+        <p>More augmentation was not consistently better. Aggressive colour changes reduced mAP, and combining several transformations performed worse than the strongest individual settings. Vehicle colour and texture can be identity-bearing evidence, so excessive distortion can remove the very signal the embedding needs.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Augmentation</th><th>mAP</th><th>Rank-1</th><th>Rank-5</th></tr></thead>
+            <tbody>
+              <tr><td>Default</td><td>54.0%</td><td>86.1%</td><td>94.0%</td></tr>
+              <tr><td>+ Colour jitter</td><td>54.5%</td><td>87.6%</td><td>95.2%</td></tr>
+              <tr><td>+ Colour augmentation</td><td>50.4%</td><td>87.1%</td><td>94.4%</td></tr>
+              <tr><td>+ Random erasing</td><td>54.7%</td><td>84.7%</td><td>93.7%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="tuning" data-reveal>
+        <p class="kicker">05 / Hyperparameters</p>
+        <h2>The learning rate changed everything.</h2>
+        <p>Reducing the learning rate from 0.0003 to 0.0001 raised mAP from 54.0% to 65.5%. A larger value of 0.005 destabilised optimisation, while 0.000005 learned too slowly within the fixed ten-epoch budget.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Learning rate</th><th>mAP</th><th>Rank-1</th><th>Rank-5</th></tr></thead>
+            <tbody>
+              <tr><td>0.005</td><td>24.4%</td><td>57.0%</td><td>73.7%</td></tr>
+              <tr><td>0.0003</td><td>54.0%</td><td>86.1%</td><td>94.0%</td></tr>
+              <tr><td>0.0001</td><td>65.5%</td><td>91.0%</td><td>96.1%</td></tr>
+              <tr><td>0.00003</td><td>63.0%</td><td>88.6%</td><td>94.6%</td></tr>
+              <tr><td>0.000005</td><td>33.3%</td><td>63.4%</td><td>80.3%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Batch size had a smaller effect. A batch of 64 retained the best mAP, while very small batches weakened the hard-example mining available to triplet loss. AMSGrad remained the best optimiser at 65.5% mAP; Adam reached 59.7%, while RMSprop and SGD fell to 31.8% and 28.3%.</p>
+      </section>
+
+      <section id="outcome" data-reveal>
+        <p class="kicker">06 / Outcome</p>
+        <h2>A 21.1-point improvement in retrieval quality.</h2>
+        <div class="stat-grid">
+          <div class="stat-card"><strong>65.5%</strong><span>final mean average precision</span></div>
+          <div class="stat-card"><strong>91.0%</strong><span>Rank-1 retrieval accuracy</span></div>
+          <div class="stat-card"><strong>96.1%</strong><span>Rank-5 retrieval accuracy</span></div>
+          <div class="stat-card"><strong>+21.1 pp</strong><span>mAP over the initial MobileNet baseline</span></div>
+        </div>
+        <p class="lead">The largest gain came from a well-chosen optimisation setting, not the most complicated architecture or augmentation stack.</p>
+        <p>The project reinforced a practical lesson about deep-learning experimentation: change one meaningful factor at a time, select with the metric that matches the task, and use the failed configurations to understand the pipeline rather than hiding them.</p>
+      </section>
+    </article>
+  </div>
+
+  <section class="case-end">
+    <div class="shell">
+      <p class="kicker">Individual university project</p>
+      <h2>Systematic tuning turned a baseline into a useful retrieval model.</h2>
+      <a class="button" href="/#work">View the other projects <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+</BaseLayout>

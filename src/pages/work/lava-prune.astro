@@ -1,0 +1,158 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Lava-Prune — Daniel Davis" description="A compact case study of Daniel Davis's MSc dissertation on training-free visual-token compaction in LLaVA-1.5-7B.">
+  <header class="case-hero shell">
+    <a class="back" href="/">← Back to portfolio</a>
+    <div class="case-title-grid">
+      <div data-reveal>
+        <p class="eyebrow">MSc dissertation · 2026</p>
+        <h1>Lava-Prune</h1>
+        <p class="case-deck">Reducing the cost of vision-language models by teaching them which image tokens they can afford to leave behind.</p>
+      </div>
+      <aside class="case-meta" data-reveal>
+        <div><span>Model</span><strong>LLaVA-1.5-7B</strong></div>
+        <div><span>Primary task</span><strong>RefCOCO visual grounding</strong></div>
+        <div><span>Method</span><strong>Training-free token compaction</strong></div>
+        <div><span>Role</span><strong>Research &amp; implementation</strong></div>
+      </aside>
+    </div>
+  </header>
+
+  <div class="hero-figure">
+    <div class="token-crop">
+      <img src="/images/lava-prune/token-selection.png" alt="The full 24 by 24 image-token grid and the 48 image patches retained at layer 12" width="1771" height="1152" />
+    </div>
+  </div>
+
+  <div class="article-shell">
+    <aside class="article-nav" aria-label="Case study contents">
+      <p>On this page</p>
+      <a href="#question">The question</a>
+      <a href="#method">The method</a>
+      <a href="#results">What happened</a>
+      <a href="#transfer">Beyond grounding</a>
+      <a href="#takeaway">The takeaway</a>
+    </aside>
+
+    <article class="prose">
+      <section id="question" data-reveal>
+        <p class="kicker">01 / The question</p>
+        <h2>Why make the model look at less?</h2>
+        <p class="lead">A vision-language model does not see one image. It sees hundreds of small patch representations—and processes every one of them repeatedly.</p>
+        <p>In LLaVA-1.5-7B, a 336 × 336 image becomes a 24 × 24 grid: 576 visual tokens travelling through 32 decoder layers alongside the user’s instruction. That detailed representation is useful, but it also increases computation and the key–value cache stored during generation.</p>
+        <p>The research asks whether some tokens can be physically removed while preserving enough evidence to complete the task. RefCOCO visual grounding is the main test: given a phrase such as “the person in the red shirt”, the model must return the correct bounding box. Recognising the scene is not enough; location matters too.</p>
+        <div class="callout"><p><strong>The tension:</strong> early pruning saves more work, but may discard evidence before image and language have interacted. Later pruning is safer, but leaves fewer layers in which a shorter sequence can help.</p></div>
+      </section>
+
+      <section id="method" data-reveal>
+        <p class="kicker">02 / The method</p>
+        <h2>A simple, fixed schedule.</h2>
+        <p>The final method—<strong>K12-QueryTopK-Z0</strong>—requires no additional training. It lets the complete image representation pass through the first 12 layers, then uses the query to rank the image patches and retain the 48 most relevant tokens. After layer 20, the remaining visual states are removed.</p>
+        <div class="schedule" role="img" aria-label="Layers 1 to 12 use 576 visual tokens, layers 13 to 20 use 48, and layers 21 to 32 use zero">
+          <div><span>Layers 01—12</span><strong>576 tokens</strong></div>
+          <div><span>Layers 13—20</span><strong>48 tokens</strong></div>
+          <div><span>Layers 21—32</span><strong>0 tokens</strong></div>
+        </div>
+        <p>The retained tokens keep their original positional gaps, while a layer-aware cache allows generation to continue as the sequence changes length. Development experiments also tested pruning depth, merging, token budgets and more structured selectors. Direct query top-k was retained because the added complexity of a target/context/anchor selector did not reliably improve the outcome.</p>
+        <figure>
+          <img src="/images/lava-prune/token-schedule.png" alt="Chart of the selected visual-token schedule across the 32 decoder layers" width="1324" height="595" loading="lazy" />
+          <figcaption>Figure 1. K12-QueryTopK-Z0’s visual-token schedule. Source: Lava-Prune dissertation.</figcaption>
+        </figure>
+        <figure>
+          <img src="/images/lava-prune/selection-frequency.png" alt="Heat maps comparing spatial token-selection frequencies for query top-k, uniform and image-only selectors" width="1838" height="628" loading="lazy" />
+          <figcaption>Figure 2. Where different selectors tend to retain image patches. Source: Lava-Prune dissertation.</figcaption>
+        </figure>
+      </section>
+
+      <section id="results" data-reveal>
+        <p class="kicker">03 / What happened</p>
+        <h2>Less work. A smaller cache. A measured speed-up.</h2>
+        <p>K12-Z0 reduces the visual workload substantially. Across the network it processes 7,296 visual token-layers rather than 18,432. On the full RefCOCO validation set, this comes with a 2.98 percentage-point reduction in grounding accuracy.</p>
+        <div class="stat-grid">
+          <div class="stat-card"><strong>60.42%</strong><span>reduction in visual token-layer work</span></div>
+          <div class="stat-card"><strong>6.26%</strong><span>reduction in end-to-end latency</span></div>
+          <div class="stat-card"><strong>54.04%</strong><span>reduction in prompt KV storage</span></div>
+          <div class="stat-card"><strong>−2.98 pp</strong><span>RefCOCO validation accuracy change</span></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Method</th><th>Acc@0.5</th><th>mIoU</th><th>Token-layer work</th></tr></thead>
+            <tbody>
+              <tr><td>Full inference</td><td>44.93%</td><td>0.4351</td><td>18,432</td></tr>
+              <tr><td>K12-Z0</td><td>41.95%</td><td>0.4285</td><td>7,296</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <figure>
+          <img src="/images/lava-prune/quality-vs-work.png" alt="Scatter chart comparing RefCOCO accuracy with visual token-layer work" width="1172" height="733" loading="lazy" />
+          <figcaption>Figure 3. Grounding quality against analytical visual-token work. Source: Lava-Prune dissertation.</figcaption>
+        </figure>
+        <h3>The analytical saving is not the runtime saving</h3>
+        <p>Five paired timing repetitions on an NVIDIA A40 reduced end-to-end latency from 0.869 to 0.814 seconds per example. That is useful, but far smaller than the 60.42% token-work reduction. The early layers remain dense, and image encoding, selection, cache handling and answer generation still cost time.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Measure</th><th>Full</th><th>K12-Z0</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr><td>End-to-end latency</td><td>0.869 s</td><td>0.814 s</td><td>−6.26%</td></tr>
+              <tr><td>Prompt KV cache</td><td>322.0 MiB</td><td>148.0 MiB</td><td>−54.04%</td></tr>
+              <tr><td>Modelled prefill</td><td>8.96 TFLOPs</td><td>4.32 TFLOPs</td><td>−51.77%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <figure>
+          <img src="/images/lava-prune/timing-decomposition.png" alt="Measured timing components for full inference and K12-Z0" width="1524" height="668" loading="lazy" />
+          <figcaption>Figure 4. Measured timing components; the bars are separate measurements, not an additive stack. Source: Lava-Prune dissertation.</figcaption>
+        </figure>
+        <h3>Held-out grounding</h3>
+        <p>The result remains a trade-off on the unseen RefCOCO splits. Accuracy falls by 3.78 points on testA and 2.57 points on testB. The threshold analysis below shows that the conclusion is not tied to a single bounding-box overlap threshold.</p>
+        <figure>
+          <img src="/images/lava-prune/heldout-thresholds.png" alt="Full minus K12-Z0 grounding accuracy at several intersection-over-union thresholds on testA and testB" width="1476" height="621" loading="lazy" />
+          <figcaption>Figure 5. Paired held-out localisation differences with 95% confidence intervals. Source: Lava-Prune dissertation.</figcaption>
+        </figure>
+      </section>
+
+      <section id="transfer" data-reveal>
+        <p class="kicker">04 / Beyond grounding</p>
+        <h2>Efficiency did not transfer uniformly.</h2>
+        <p>The final schedule was frozen and evaluated on three other visual-language benchmarks. POPE and MME stayed close to their matching full-inference controls, with confidence intervals that included zero. TextVQA exposed a much larger weakness.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Benchmark</th><th>Full</th><th>K12-Z0</th><th>Paired change</th></tr></thead>
+            <tbody>
+              <tr><td>POPE accuracy</td><td>86.18%</td><td>86.32%</td><td>+0.14 pp</td></tr>
+              <tr><td>MME total</td><td>1,792.04</td><td>1,823.05</td><td>+31.00</td></tr>
+              <tr><td>TextVQA soft accuracy</td><td>47.79%</td><td>22.50%</td><td>−25.29 pp</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <figure>
+          <img src="/images/lava-prune/transfer.png" alt="Changes from matching full inference across POPE, MME and TextVQA" width="1145" height="733" loading="lazy" />
+          <figcaption>Figure 6. Cross-benchmark transfer effects. Source: Lava-Prune dissertation.</figcaption>
+        </figure>
+        <p>Keeping the 48 selected visual states after layer 20 recovered only 2.44 points on TextVQA—around 9.64% of the deficit relative to Full. The zero-token tail contributes to the failure, but does not explain most of it. A fixed representation that is reasonable for object grounding may not preserve the fine-grained evidence needed to read text.</p>
+        <figure>
+          <img src="/images/lava-prune/textvqa-diagnostic.png" alt="TextVQA scores for full inference, K12-Z0 and the K12 no-tail diagnostic" width="1124" height="698" loading="lazy" />
+          <figcaption>Figure 7. Post-hoc zero-tail diagnostic on TextVQA. Source: Lava-Prune dissertation.</figcaption>
+        </figure>
+      </section>
+
+      <section id="takeaway" data-reveal>
+        <p class="kicker">05 / The takeaway</p>
+        <h2>A shorter sequence is a mechanism, not a result.</h2>
+        <p class="lead">The central lesson is that efficiency has to be measured—and quality has to be tested on the evidence each task actually needs.</p>
+        <p>K12-Z0 is a clear, reproducible operating point: it reduces modelled work, memory and real latency, but it does not preserve performance universally. The gap between a 60.42% analytical reduction and a 6.26% speed-up shows why token counts alone are not enough. The TextVQA result shows the same for quality: success on one type of visual reasoning does not guarantee transfer to another.</p>
+        <p>Future work should adapt the pruning boundary and token budget to each image and request, allowing reading-heavy tasks to retain more visual evidence while simpler tasks prune more aggressively.</p>
+      </section>
+    </article>
+  </div>
+
+  <section class="case-end">
+    <div class="shell">
+      <p class="kicker">End of case study</p>
+      <h2>Research is most useful when the difficult results stay in the story.</h2>
+      <a class="button" href="https://github.com/dd00697/vlm-pruning" target="_blank" rel="noreferrer">Explore the code <span aria-hidden="true">↗</span></a>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>CausalDrive — Project Proposal</title>
+  <style>
+    @page { size: A4; margin: 13mm 15mm 14mm; }
+    :root {
+      --ink: #14213d;
+      --muted: #5f6b7a;
+      --accent: #ff6b35;
+      --teal: #1a8f8a;
+      --sky: #e9f3ff;
+      --paper: #ffffff;
+      --line: #dce3eb;
+      --soft: #f4f7fa;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 9.5pt;
+      line-height: 1.42;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { font-size: 30pt; line-height: 1.04; letter-spacing: -1.2px; margin-bottom: 9px; }
+    h2 { font-size: 17pt; line-height: 1.15; letter-spacing: -.35px; margin-bottom: 9px; }
+    h3 { font-size: 10.5pt; margin-bottom: 4px; }
+    p { margin-bottom: 7px; }
+    ul { margin: 4px 0 0 17px; padding: 0; }
+    li { margin-bottom: 3px; }
+    .page { min-height: 268mm; position: relative; page-break-after: always; }
+    .page:last-child { page-break-after: auto; }
+    .eyebrow { color: var(--accent); font-size: 8pt; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; }
+    .lede { color: var(--muted); font-size: 12pt; line-height: 1.48; max-width: 155mm; }
+    .rule { height: 4px; width: 40mm; background: linear-gradient(90deg, var(--accent), var(--teal)); margin: 10px 0 14px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .card { border: 1px solid var(--line); border-radius: 9px; padding: 9px 10px; background: var(--paper); break-inside: avoid; }
+    .card.tint { background: var(--soft); }
+    .card strong { color: var(--ink); }
+    .number { display: inline-grid; place-items: center; width: 21px; height: 21px; margin-right: 5px; border-radius: 50%; background: var(--ink); color: white; font-weight: 800; }
+    .tag { display: inline-block; padding: 2px 6px; margin: 2px 2px 0 0; border-radius: 99px; background: var(--sky); color: #20578b; font-size: 7.5pt; font-weight: 700; }
+    .tag.orange { background: #fff0e9; color: #a7421c; }
+    .tag.green { background: #e6f6f3; color: #176963; }
+    .callout { margin: 10px 0; padding: 10px 12px; border-left: 4px solid var(--accent); background: #fff6f1; font-size: 10.5pt; }
+    .pipeline { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; align-items: stretch; margin: 13px 0; }
+    .stage { position: relative; padding: 10px 5px; border-radius: 8px; background: var(--ink); color: white; text-align: center; font-size: 8pt; font-weight: 700; }
+    .stage:not(:last-child)::after { content: "›"; position: absolute; right: -6px; top: 7px; z-index: 2; color: var(--accent); font-size: 16pt; }
+    table { width: 100%; border-collapse: collapse; margin-top: 7px; font-size: 8.4pt; }
+    th { padding: 6px; text-align: left; background: var(--ink); color: white; }
+    td { padding: 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    tr:nth-child(even) td { background: var(--soft); }
+    .timeline { margin-top: 8px; }
+    .phase { display: grid; grid-template-columns: 22mm 1fr 35mm; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--line); align-items: start; }
+    .month { color: var(--accent); font-weight: 800; }
+    .gate { color: var(--teal); font-weight: 700; font-size: 8pt; }
+    .metric { padding: 8px; border-top: 3px solid var(--teal); background: var(--soft); }
+    .metric b { display: block; font-size: 11pt; margin-bottom: 2px; }
+    .small { color: var(--muted); font-size: 7.8pt; }
+    .footer { position: absolute; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-between; color: #7b8795; font-size: 7.5pt; }
+    .cover {
+      padding: 24mm 13mm 0;
+      background:
+        radial-gradient(circle at 88% 10%, rgba(26,143,138,.18), transparent 28%),
+        radial-gradient(circle at 10% 75%, rgba(255,107,53,.16), transparent 26%);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      min-height: 245mm;
+    }
+    .cover h1 { font-size: 38pt; max-width: 155mm; margin-top: 26mm; }
+    .subtitle { font-size: 17pt; line-height: 1.35; max-width: 150mm; color: var(--muted); }
+    .meta { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 25mm; }
+    .meta div { border-top: 1px solid var(--line); padding-top: 6px; }
+    .purpose { margin-top: 14mm; padding: 12px; border-radius: 10px; color: white; background: linear-gradient(120deg, var(--ink), #1d4661); }
+    .refs { font-size: 7.8pt; color: var(--muted); word-break: break-word; }
+  </style>
+</head>
+<body>
+
+<section class="page">
+  <div class="cover">
+    <div class="eyebrow">Research & engineering proposal · September 2026</div>
+    <h1>CausalDrive</h1>
+    <div class="rule"></div>
+    <p class="subtitle">Scalable multimodal world models for embodied intelligence</p>
+    <div class="purpose">
+      <strong>Core objective</strong><br />
+      Develop efficient world-model pretraining across vision, action and state; use autonomous driving as the primary testbed, then validate transfer to a second embodied environment. Deliver research evidence and a production-grade Python/C++/GPU system.
+    </div>
+    <div class="meta">
+      <div><span class="small">PROJECT LEAD</span><br /><strong>Daniel Davis</strong></div>
+      <div><span class="small">PLANNED DURATION</span><br /><strong>18–24 months, part-time</strong></div>
+      <div><span class="small">PRIMARY LANGUAGES</span><br /><strong>Python · C++20</strong></div>
+      <div><span class="small">TARGET OUTCOME</span><br /><strong>First-author research + scalable ML system</strong></div>
+    </div>
+    <div class="pipeline">
+      <div class="stage">Multimodal data</div>
+      <div class="stage">Pretraining</div>
+      <div class="stage">World rollout</div>
+      <div class="stage">Policy / task</div>
+      <div class="stage">GPU deployment</div>
+    </div>
+    <p class="lede">CausalDrive is the first concrete application, not the permanent boundary. The programme develops transferable expertise in multimodal/video foundation models, controllable generation, distributed training and accelerated inference for driving, robotics and frontier research engineering.</p>
+  </div>
+  <div class="footer"><span>CausalDrive · Project proposal</span><span>01</span></div>
+</section>
+
+<section class="page">
+  <div class="eyebrow">01 · Scope</div>
+  <h2>Research question and system features</h2>
+  <div class="callout"><strong>Research question:</strong> How can multimodal world models learn efficient, action-controllable and uncertainty-aware representations that support real-time decisions—and which principles transfer between autonomous driving and other embodied agents?</div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3><span class="number">1</span>Multimodal pretraining</h3>
+      <p>Jointly model video, agent actions, physical state and optional language/task context using self-supervised objectives.</p>
+    </div>
+    <div class="card">
+      <h3><span class="number">2</span>Structured latent state</h3>
+      <p>A compact visual representation augmented with ego motion, drivable-area, lane and dynamic-object features.</p>
+    </div>
+    <div class="card">
+      <h3><span class="number">3</span>Action-conditioned rollout</h3>
+      <p>A small recurrent or transformer dynamics model predicts 0.5–2 seconds ahead under a proposed action sequence.</p>
+    </div>
+    <div class="card">
+      <h3><span class="number">4</span>Multiple futures</h3>
+      <p>Probabilistic or ensemble prediction represents ambiguity rather than collapsing every situation into one average future.</p>
+    </div>
+    <div class="card">
+      <h3><span class="number">5</span>Action fidelity</h3>
+      <p>Counterfactual tests verify that steering and speed actually change predictions in physically and geometrically consistent ways.</p>
+    </div>
+    <div class="card">
+      <h3><span class="number">6</span>Uncertainty</h3>
+      <p>Calibration and out-of-distribution tests identify when rollout predictions should not be trusted by a planner.</p>
+    </div>
+    <div class="card">
+      <h3><span class="number">7</span>Scalable ML systems</h3>
+      <p>Multi-GPU training, data streaming, mixed precision and profiling connect local research to foundation-model engineering.</p>
+    </div>
+    <div class="card">
+      <h3><span class="number">8</span>Deployment and transfer</h3>
+      <p>C++/CUDA inference supports CARLA closed loop, followed by one small navigation or manipulation transfer study.</p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:12px">Explicit non-goals</h3>
+  <p>The project will not attempt frontier-scale pretraining, an entire driving stack, or several full robotics projects. Scaling is studied through controlled experiments; a second domain remains a small transfer test rather than a competing project.</p>
+
+  <h3 style="margin-top:10px">Primary hypothesis</h3>
+  <p>Action-consistency objectives, planning-aware latents and dynamic token routing can improve controllability and task utility per unit of compute; the resulting principles should transfer beyond the original driving domain.</p>
+  <div class="footer"><span>CausalDrive · Project proposal</span><span>02</span></div>
+</section>
+
+<section class="page">
+  <div class="eyebrow">02 · Research</div>
+  <h2>Experiments and potential contributions</h2>
+
+  <div class="grid-2">
+    <div class="card tint">
+      <h3>A. Action-fidelity benchmark</h3>
+      <p>Hold the initial scene fixed while varying steering and speed. Compare recorded, zeroed, reversed and shuffled actions. Measure whether predicted ego motion, lanes, objects and optical flow respond correctly.</p>
+      <span class="tag">Most feasible paper</span><span class="tag green">Low–medium compute</span>
+    </div>
+    <div class="card tint">
+      <h3>B. Planning-aware representation</h3>
+      <p>Compare reconstruction-oriented latents against structured states trained for ego motion, occupancy and risk. Test whether visual quality predicts downstream planning performance.</p>
+      <span class="tag">Strong research question</span><span class="tag green">Medium compute</span>
+    </div>
+    <div class="card tint">
+      <h3>C. Calibrated multiple futures</h3>
+      <p>Compare deterministic, ensemble and probabilistic rollouts. Evaluate calibration, diversity, risk coverage and behaviour under weather, lighting and action distribution shifts.</p>
+      <span class="tag orange">Research extension</span><span class="tag green">Medium compute</span>
+    </div>
+    <div class="card tint">
+      <h3>D. Scalable, action-aware efficiency</h3>
+      <p>Allocate tokens by action and horizon; measure quality, throughput and memory from one GPU to multi-GPU training, then validate the method in a second embodied task.</p>
+      <span class="tag orange">Links to Lava-Prune</span><span class="tag">Novelty candidate</span>
+    </div>
+  </div>
+
+  <h3 style="margin-top:12px">Required baselines</h3>
+  <table>
+    <tr><th>Baseline</th><th>Purpose</th><th>Key comparison</th></tr>
+    <tr><td>Repeat last state/frame</td><td>Measures the value of learning any dynamics.</td><td>Short-horizon latent and perceptual error</td></tr>
+    <tr><td>Constant velocity / optical flow</td><td>Tests whether the model beats simple motion assumptions.</td><td>Geometry and ego-motion consistency</td></tr>
+    <tr><td>Linear or MLP dynamics</td><td>Controls for model complexity.</td><td>Accuracy, parameters and latency</td></tr>
+    <tr><td>Action-agnostic architecture</td><td>Determines whether action conditioning adds information.</td><td>Counterfactual fidelity and rollout error</td></tr>
+    <tr><td>Shuffled/zero actions</td><td>Detects models that ignore control input.</td><td>Action sensitivity and physical plausibility</td></tr>
+  </table>
+
+  <h3 style="margin-top:11px">Evaluation groups</h3>
+  <div class="grid-3">
+    <div class="metric"><b>Prediction</b>Latent cosine/MSE, trajectory error, heading, optional LPIPS/SSIM.</div>
+    <div class="metric"><b>Control fidelity</b>Response direction, magnitude, monotonicity and scene consistency.</div>
+    <div class="metric"><b>Planning</b>Collision proxy, lane deviation, progress, comfort and success rate.</div>
+    <div class="metric"><b>Uncertainty</b>Calibration error, NLL, risk–coverage and OOD detection.</div>
+    <div class="metric"><b>Systems</b>p50/p95/p99 latency, memory, throughput and numerical agreement.</div>
+    <div class="metric"><b>Efficiency</b>Parameters, FLOPs, tokens, energy estimate and performance Pareto front.</div>
+  </div>
+  <div class="footer"><span>CausalDrive · Project proposal</span><span>03</span></div>
+</section>
+
+<section class="page">
+  <div class="eyebrow">03 · Implementation</div>
+  <h2>Datasets, technology stack and compute</h2>
+
+  <h3>Dataset plan</h3>
+  <table>
+    <tr><th>Dataset</th><th>Role</th><th>Why it is used</th></tr>
+    <tr><td><strong>Comma2k19</strong></td><td>Prototype and real-data dynamics</td><td>33+ hours of road camera, GPS, IMU and CAN signals including speed and steering. Limited route diversity must be reported.</td></tr>
+    <tr><td><strong>nuScenes / ACT-Bench subset</strong></td><td>Diverse urban evaluation</td><td>More varied scenes and trajectories; useful for comparison with published action-controllability work.</td></tr>
+    <tr><td><strong>CARLA</strong></td><td>Controlled intervention and closed loop</td><td>Repeatable scenes with deliberately varied actions, traffic and weather; supports Python and C++ integration.</td></tr>
+    <tr><td><strong>Isaac Lab or visual navigation</strong></td><td>Small cross-domain transfer</td><td>Tests whether representations and action-fidelity metrics transfer beyond cars without creating a second major project.</td></tr>
+  </table>
+
+  <div class="grid-2" style="margin-top:10px">
+    <div class="card">
+      <h3>Python training and research</h3>
+      <span class="tag">Python 3.12</span><span class="tag">PyTorch</span><span class="tag">torchvision / timm</span><span class="tag">OpenCV / PyAV</span><span class="tag">Hydra</span><span class="tag">MLflow or W&amp;B</span><span class="tag">pytest</span><span class="tag">Ruff</span>
+      <p style="margin-top:7px">Begin with frozen video/VAE features, then progressively study joint video-action-state pretraining and reusable world-model representations.</p>
+    </div>
+    <div class="card">
+      <h3>C++ and GPU performance</h3>
+      <span class="tag orange">C++20</span><span class="tag orange">CMake</span><span class="tag orange">ONNX Runtime</span><span class="tag orange">TensorRT</span><span class="tag orange">CUDA</span><span class="tag orange">Triton</span><span class="tag orange">Nsight</span><span class="tag orange">GoogleTest</span>
+      <p style="margin-top:7px">Profile batch-one rollouts and training bottlenecks; introduce TensorRT, custom Triton/CUDA work and low precision only after measurements justify them.</p>
+    </div>
+    <div class="card">
+      <h3>Training and data infrastructure</h3>
+      <span class="tag green">DDP</span><span class="tag green">FSDP / DeepSpeed</span><span class="tag green">AMP</span><span class="tag green">streaming shards</span><span class="tag green">Docker</span><span class="tag green">GitHub Actions</span><span class="tag green">DVC optional</span>
+      <p style="margin-top:7px">Configuration-driven, resumable experiments with data validation, distributed checkpoints, throughput telemetry, fixed splits and Python/C++ equivalence tests.</p>
+    </div>
+    <div class="card">
+      <h3>Recommended development machine</h3>
+      <p><strong>GPU:</strong> NVIDIA 24 GB VRAM (RTX 3090/4090, RTX A5000-class)<br />
+      <strong>CPU:</strong> 12–16 modern cores<br />
+      <strong>RAM:</strong> 64 GB<br />
+      <strong>Storage:</strong> 2–4 TB NVMe SSD<br />
+      <strong>OS:</strong> Linux preferred; WSL2 acceptable for training</p>
+    </div>
+  </div>
+
+  <div class="callout"><strong>Compute plan:</strong> baselines should fit on 12–16 GB VRAM; one 24 GB GPU supports the core research. Budget roughly 8–48 GPU-hours per serious run and hundreds across ablations. Short rented 2–4 GPU runs validate DDP/FSDP scaling. Frontier-scale pretraining is not attempted; scaling claims remain empirical and bounded.</div>
+  <div class="footer"><span>CausalDrive · Project proposal</span><span>04</span></div>
+</section>
+
+<section class="page">
+  <div class="eyebrow">04 · Delivery</div>
+  <h2>18–24 month timeline</h2>
+  <div class="timeline">
+    <div class="phase"><div class="month">Months 1–2</div><div><strong>Specification and data audit</strong><br />Literature map, dataset schemas, synchronisation checks, fixed splits and reproducible data subset.</div><div class="gate">Gate: trustworthy pipeline</div></div>
+    <div class="phase"><div class="month">Months 3–4</div><div><strong>Deterministic baselines</strong><br />Repeat-state, constant-motion, linear/MLP dynamics and evaluation by time horizon.</div><div class="gate">Gate: baseline report</div></div>
+    <div class="phase"><div class="month">Months 5–7</div><div><strong>Action-conditioned model</strong><br />Recurrent and small-transformer models; one-step then autoregressive 0.5–2 second rollouts.</div><div class="gate">Gate: beats baselines</div></div>
+    <div class="phase"><div class="month">Months 8–10</div><div><strong>Action-fidelity benchmark</strong><br />Counterfactual actions, action-agnostic ablation, shuffled inputs and cross-scene evaluation.</div><div class="gate">Gate: paper-worthy evidence</div></div>
+    <div class="phase"><div class="month">Months 11–12</div><div><strong>Production MVP</strong><br />ONNX/C++20 runtime, correctness tests and p50/p95/p99 profiling; portfolio-ready ML engineering release.</div><div class="gate">Gate: apply for ML roles</div></div>
+    <div class="phase"><div class="month">Months 13–15</div><div><strong>Uncertainty and distributed training</strong><br />Multiple futures, calibration and OOD tests; DDP/FSDP, sharded data and throughput scaling.</div><div class="gate">Gate: reliable + scalable</div></div>
+    <div class="phase"><div class="month">Months 16–18</div><div><strong>CARLA closed-loop evaluation</strong><br />Candidate generation, rollout scoring, uncertainty penalty and repeatable driving scenarios.</div><div class="gate">Gate: closed-loop results</div></div>
+    <div class="phase"><div class="month">Months 19–21</div><div><strong>GPU efficiency and transfer</strong><br />Action-aware token routing, AMP/TensorRT/Triton profiling, plus one compact navigation or manipulation study.</div><div class="gate">Gate: transferable result</div></div>
+    <div class="phase"><div class="month">Months 22–24</div><div><strong>Publication and release</strong><br />Replication, first-author submission, open-source release, scaling report, project site and PhD proposal.</div><div class="gate">Gate: submission package</div></div>
+  </div>
+
+  <h3 style="margin-top:12px">Decision points</h3>
+  <div class="grid-3">
+    <div class="card"><strong>Month 4</strong><br />If data alignment is unreliable, narrow to one source before modelling.</div>
+    <div class="card"><strong>Month 10</strong><br />If the model ignores actions, prioritise the benchmark and objective design over scaling.</div>
+    <div class="card"><strong>Month 18</strong><br />If closed-loop results are unstable, publish open-loop findings and retain CARLA as future work.</div>
+  </div>
+  <div class="callout"><strong>Two success points:</strong> month 12 delivers an employable end-to-end ML system; month 24 delivers a research programme spanning controllability, distributed training, GPU efficiency and cross-domain embodied transfer.</div>
+  <div class="footer"><span>CausalDrive · Project proposal</span><span>05</span></div>
+</section>
+
+<section class="page">
+  <div class="eyebrow">05 · Outcomes</div>
+  <h2>Success criteria, outputs and risks</h2>
+  <div class="grid-2">
+    <div class="card tint">
+      <h3>Research success</h3>
+      <ul>
+        <li>A precise contribution beyond model implementation.</li>
+        <li>Action-conditioned gains against an identical action-free baseline.</li>
+        <li>Counterfactual evaluation and one cross-domain transfer study.</li>
+        <li>Ablations, negative results and statistical uncertainty.</li>
+        <li>A first-author paper, workshop submission or public preprint.</li>
+      </ul>
+    </div>
+    <div class="card tint">
+      <h3>Engineering success</h3>
+      <ul>
+        <li>Reproducible training from a documented data subset.</li>
+        <li>Tested Python, C++ and GPU-optimised inference paths.</li>
+        <li>Measured batch-one latency, memory and multi-GPU scaling.</li>
+        <li>Resumable distributed runs, Docker, CI and versioned experiments.</li>
+        <li>Short interactive or recorded closed-loop demonstration.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="margin-top:13px">Principal risks and mitigations</h3>
+  <table>
+    <tr><th>Risk</th><th>Mitigation</th></tr>
+    <tr><td>Model ignores the action signal.</td><td>Action-free control model, shuffled actions, counterfactual sweeps and explicit action-consistency loss.</td></tr>
+    <tr><td>Visual generation consumes the compute budget.</td><td>Make structured latent prediction primary; keep decoding diagnostic and low resolution.</td></tr>
+    <tr><td>Observational data cannot validate interventions.</td><td>Use CARLA for controlled counterfactual tests and clearly separate real-data from simulator claims.</td></tr>
+    <tr><td>Scaling becomes performative rather than scientific.</td><td>Report throughput, memory and convergence from controlled 1–4 GPU tests; make no fleet-scale claims.</td></tr>
+    <tr><td>Project expands indefinitely.</td><td>Freeze the driving MVP at month 12; keep the second domain to one transfer experiment.</td></tr>
+    <tr><td>Solo research lacks feedback or references.</td><td>Seek periodic academic review; retain project leadership and first authorship while collaborating where valuable.</td></tr>
+  </table>
+
+  <h3 style="margin-top:12px">Release package</h3>
+  <p><span class="tag">Open repository</span><span class="tag">First-author paper</span><span class="tag">Experiment tables</span><span class="tag">Model/data cards</span><span class="tag">Scaling report</span><span class="tag">C++/CUDA benchmark</span><span class="tag">CARLA demo</span><span class="tag">Transfer study</span></p>
+
+  <div class="callout"><strong>PhD and career direction:</strong> position the work as “Efficient and Action-Controllable Multimodal World Models for Embodied Intelligence.” Driving supplies the primary testbed; scalable pretraining, GPU systems and transfer keep the work relevant to Wayve, NVIDIA Physical AI, DeepMind and general multimodal foundation-model teams.</div>
+
+  <h3 style="margin-top:12px">Selected foundations</h3>
+  <div class="refs">
+    Wayve, “GAIA-4: A generative world model for closed-loop driving simulation,” 2026 — https://wayve.ai/thinking/gaia-4/<br />
+    NVIDIA, “Cosmos World Foundation Model Platform for Physical AI” — https://research.nvidia.com/labs/dir/cosmos1/<br />
+    NVIDIA GEAR, “Generalist Embodied Agent Research” — https://research.nvidia.com/labs/gear/<br />
+    Arai et al., “ACT-Bench,” ICLR World Models Workshop, 2025 — https://iclr.cc/virtual/2025/37570<br />
+    comma.ai, “Comma2k19” — https://github.com/commaai/comma2k19 · CARLA — https://carla.readthedocs.io/
+  </div>
+  <div class="footer"><span>CausalDrive · Project proposal</span><span>06</span></div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,143 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Daniel Davis — Software Engineer" description="Portfolio of Daniel Davis, a graduate software engineer working across computer vision, machine learning and practical software systems.">
+  <section class="hero shell">
+    <div class="hero-grid">
+      <div data-reveal>
+        <p class="eyebrow">Software engineer · ML researcher</p>
+        <h1>Building useful systems from <em>complex</em> ideas.</h1>
+        <p class="hero-intro">I’m Daniel, a graduate software engineer with a background in computer science, computer vision and machine learning. I care about the space where rigorous research becomes dependable software.</p>
+        <div class="button-row">
+          <a class="button primary" href="#work">Explore my work <span aria-hidden="true">↓</span></a>
+          <a class="button secondary" href="https://github.com/dd00697" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+          <a class="button secondary" href="https://www.linkedin.com/in/daniel-davis-t34/" target="_blank" rel="noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+      <aside class="availability" data-reveal>
+        <p><span class="dot"></span>Graduate Software Engineer</p>
+        <strong>Compass Group.</strong>
+        <p>October 2026 — Present<br />London, UK</p>
+      </aside>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Computer vision <b>✦</b></span><span>Machine learning <b>✦</b></span><span>Software engineering <b>✦</b></span><span>Research <b>✦</b></span><span>Python <b>✦</b></span><span>Computer vision <b>✦</b></span><span>Machine learning <b>✦</b></span><span>Software engineering <b>✦</b></span><span>Research <b>✦</b></span><span>Python <b>✦</b></span>
+    </div>
+  </div>
+
+  <section class="work-section shell" id="work">
+    <header class="section-heading" data-reveal>
+      <p class="section-index">01 / Selected work</p>
+      <h2>Research with measurable outcomes.</h2>
+    </header>
+    <a class="feature-card" href="/work/lava-prune" data-reveal>
+      <div class="feature-visual">
+        <div class="token-crop">
+          <img src="/images/lava-prune/token-selection.png" alt="Visualisation showing an image divided into tokens and the 48 patches retained by the Lava-Prune selector" width="1771" height="1152" loading="lazy" />
+        </div>
+      </div>
+      <div class="feature-copy">
+        <div>
+          <p class="kicker">MSc dissertation · Vision-language models</p>
+          <h3>Lava-Prune</h3>
+          <p>Can a vision-language model look at less of an image without losing what matters? This study develops and evaluates a training-free way to remove visual tokens from LLaVA-1.5-7B.</p>
+          <div class="metric-row">
+            <div class="metric"><strong>60.42%</strong><span>less token-layer work</span></div>
+            <div class="metric"><strong>6.26%</strong><span>lower measured latency</span></div>
+            <div class="metric"><strong>54.04%</strong><span>smaller prompt KV cache</span></div>
+          </div>
+        </div>
+        <span class="text-link">Read the case study <span aria-hidden="true">→</span></span>
+      </div>
+    </a>
+    <div class="project-grid" data-reveal>
+      <a class="project-card" href="/work/action-recognition">
+        <div class="project-card-image action-image">
+          <img src="/images/action-recognition/attention-overlays.png" alt="Attention overlays across frames from correctly and incorrectly classified action videos" width="2124" height="1734" loading="lazy" />
+        </div>
+        <div class="project-card-copy">
+          <p class="kicker">Computer vision · Group project</p>
+          <h3>Action Recognition with Vision Transformers</h3>
+          <p>Comparing video transformers, then extending VideoMAE with a DETR-style head for spatio-temporal localisation.</p>
+          <span class="text-link">Read the case study <span aria-hidden="true">→</span></span>
+        </div>
+      </a>
+      <a class="project-card" href="/work/speech-recognition">
+        <div class="project-card-image speech-image">
+          <img src="/images/speech-recognition/variance-floor.png" alt="Development and evaluation accuracy across different HMM variance-floor settings" width="1166" height="752" loading="lazy" />
+        </div>
+        <div class="project-card-copy">
+          <p class="kicker">Speech processing · Group project</p>
+          <h3>Speech Recognition from First Principles</h3>
+          <p>An eleven-word recogniser built in MATLAB using MFCC features, Baum–Welch training and Viterbi decoding.</p>
+          <span class="text-link">Read the case study <span aria-hidden="true">→</span></span>
+        </div>
+      </a>
+      <a class="project-card text-project-card" href="/work/vehicle-reidentification">
+        <div class="project-card-number" aria-hidden="true">03</div>
+        <div class="project-card-copy">
+          <p class="kicker">Deep learning · Individual project</p>
+          <h3>Vehicle Re-identification</h3>
+          <p>Tuning an image-retrieval pipeline to recognise the same vehicle across cameras, viewpoints and changing conditions.</p>
+          <span class="text-link">Read the case study <span aria-hidden="true">→</span></span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section class="about-section" id="about">
+    <div class="shell">
+      <header class="section-heading" data-reveal>
+        <p class="section-index">02 / About</p>
+        <h2>Interests and skills.</h2>
+      </header>
+      <div class="about-grid" data-reveal>
+        <p class="about-lead">I’m interested in computer vision, machine learning, multimodal systems, robotics and software engineering.</p>
+        <div class="about-copy">
+          <p>My experience includes developing and evaluating machine-learning models, designing experiments and building reproducible software.</p>
+          <div class="focus-list">
+            <div><strong>Languages</strong><span>Python · TypeScript</span></div>
+            <div><strong>Machine learning</strong><span>Computer vision · VLMs · model evaluation</span></div>
+            <div><strong>Engineering</strong><span>Software development · reproducible experiments</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="experience-section shell" id="experience">
+    <header class="section-heading" data-reveal>
+      <p class="section-index">03 / Path so far</p>
+      <h2>Experience &amp; education.</h2>
+    </header>
+    <div class="timeline" data-reveal>
+      <div class="timeline-item">
+        <time>Postgraduate</time>
+        <div><h3>MSc Computer Vision, Robotics &amp; Machine Learning</h3><p>Advanced study of intelligent systems, culminating in research on efficient visual-token processing in large vision-language models.</p></div>
+        <span>University of Surrey</span>
+      </div>
+      <div class="timeline-item">
+        <time>Undergraduate</time>
+        <div><h3>BSc Computer Science</h3><p>A broad grounding in algorithms, programming, software engineering and the principles underlying modern computing systems.</p></div>
+        <span>University of Surrey · Bachelor’s degree</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact-section shell" id="contact">
+    <div class="contact-card" data-reveal>
+      <p class="kicker">04 / Contact</p>
+      <h2>Let’s build something thoughtful.</h2>
+      <p>I’m always interested in good engineering problems, ambitious ideas and conversations about practical machine learning.</p>
+      <div class="button-row">
+        <a class="button" href="mailto:daniel.davis3400@gmail.com">Send me an email <span aria-hidden="true">↗</span></a>
+        <a class="button contact-secondary" href="https://www.linkedin.com/in/daniel-davis-t34/" target="_blank" rel="noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
+        <a class="button contact-secondary" href="https://github.com/dd00697" target="_blank" rel="noreferrer">View GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

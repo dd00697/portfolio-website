@@ -1,0 +1,115 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Action Recognition with Vision Transformers — Daniel Davis" description="A university group project comparing video Vision Transformers for action recognition and spatio-temporal action localisation.">
+  <header class="case-hero shell">
+    <a class="back" href="/#work">← Back to selected work</a>
+    <div class="case-title-grid">
+      <div data-reveal>
+        <p class="eyebrow">University project · Computer vision</p>
+        <h1>Action Recognition</h1>
+        <p class="case-deck">Understanding not only what is happening in a video, but where the action occurs and how it develops through time.</p>
+      </div>
+      <aside class="case-meta" data-reveal>
+        <div><span>Models</span><strong>VideoMAE · TimeSFormer · ViViT</strong></div>
+        <div><span>Datasets</span><strong>HMDB-simp · JHMDB</strong></div>
+        <div><span>Tasks</span><strong>Classification · localisation</strong></div>
+        <div><span>Context</span><strong>University of Surrey group project</strong></div>
+      </aside>
+    </div>
+  </header>
+
+  <div class="hero-figure">
+    <img src="/images/action-recognition/attention-overlays.png" alt="Video frames with attention overlays for correct and incorrect action classifications" width="2124" height="1734" />
+  </div>
+
+  <div class="article-shell">
+    <aside class="article-nav" aria-label="Case study contents">
+      <p>On this page</p>
+      <a href="#problem">The problem</a>
+      <a href="#classification">Classification</a>
+      <a href="#localisation">Localisation</a>
+      <a href="#analysis">Understanding errors</a>
+      <a href="#outcome">Outcome</a>
+    </aside>
+
+    <article class="prose">
+      <section id="problem" data-reveal>
+        <p class="kicker">01 / The problem</p>
+        <h2>Recognising action across space and time.</h2>
+        <p class="lead">A still image can show appearance. An action is defined by how that appearance changes from one frame to the next.</p>
+        <p>This group project studied two connected video-understanding tasks. The first assigns one of 25 action labels to a short clip. The second predicts the actor’s class and location across the clip, producing a continuous action tube rather than a single image-level decision.</p>
+        <p>Three pretrained transformer architectures—TimeSFormer, VideoMAE and ViViT—were fine-tuned and compared. The most practical backbone was then extended with a DETR-style detection head for spatio-temporal localisation.</p>
+      </section>
+
+      <section id="classification" data-reveal>
+        <p class="kicker">02 / Classification</p>
+        <h2>Choosing the strongest practical backbone.</h2>
+        <p>VideoMAE produced the best validation top-1 accuracy and weighted F1 while taking roughly half the training time of ViViT. This made it the most useful accuracy–efficiency compromise for the wider experimental programme.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Architecture</th><th>Val top-1</th><th>Val top-5</th><th>Weighted F1</th><th>Runtime</th></tr></thead>
+            <tbody>
+              <tr><td>TimeSFormer</td><td>83.96%</td><td>94.65%</td><td>83.28%</td><td>18m 42s</td></tr>
+              <tr><td>VideoMAE</td><td>88.77%</td><td>97.86%</td><td>88.53%</td><td>19m 14s</td></tr>
+              <tr><td>ViViT</td><td>87.70%</td><td>99.47%</td><td>87.40%</td><td>38m 06s</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Ablations explored frame count, temporal sampling, fine-tuning depth, data augmentation and learning-rate schedules. Accuracy improved as temporal coverage increased to 24 frames, while a 32-frame input added cost without improving the result. Full fine-tuning and label-preserving augmentations were especially important.</p>
+        <div class="stat-grid">
+          <div class="stat-card"><strong>91.49%</strong><span>held-out HMDB top-1 accuracy</span></div>
+          <div class="stat-card"><strong>99.47%</strong><span>held-out top-5 accuracy</span></div>
+          <div class="stat-card"><strong>91.33%</strong><span>macro F1 across 25 classes</span></div>
+          <div class="stat-card"><strong>24</strong><span>frames in the final classifier input</span></div>
+        </div>
+        <figure>
+          <img src="/images/action-recognition/training-dynamics.png" alt="VideoMAE training curves showing loss, top-1 accuracy and top-5 accuracy" width="1800" height="612" loading="lazy" />
+          <figcaption>Figure 1. Training dynamics for the final VideoMAE classifier. Source: project report.</figcaption>
+        </figure>
+      </section>
+
+      <section id="localisation" data-reveal>
+        <p class="kicker">03 / Localisation</p>
+        <h2>From a clip label to an action tube.</h2>
+        <p>The VideoMAE backbone was connected to a transformer decoder with learned action queries. Separate heads predicted class, a normalised tubelet box and its temporal extent. Hungarian matching paired predictions with ground truth during training.</p>
+        <figure>
+          <img src="/images/action-recognition/architecture.png" alt="Architecture of the VideoMAE and DETR-style spatio-temporal action-localisation system" width="1774" height="887" loading="lazy" />
+          <figcaption>Figure 2. The final VideoMAE–DETR localisation pipeline. Source: project report.</figcaption>
+        </figure>
+        <p>Four decoder layers and five object queries gave the best balance. Multi-layer feature fusion helped because localisation needs spatial detail that may be weakened in the most semantic final backbone layer. The strongest aggressively fine-tuned tubelet configuration reached 78.57% frame-mAP and 84.91% video-mAP.</p>
+        <figure>
+          <img src="/images/action-recognition/localisation-strip-a.png" alt="Video strips comparing ground-truth and predicted boxes for accurate action localisations" width="2400" height="774" loading="lazy" />
+          <figcaption>Figure 3. Example action tubes across video frames. Source: project report.</figcaption>
+        </figure>
+      </section>
+
+      <section id="analysis" data-reveal>
+        <p class="kicker">04 / Understanding errors</p>
+        <h2>Attention can be plausible and still be wrong.</h2>
+        <p>Most classification mistakes occurred between visually adjacent movements: throwing and picking, drawing a sword and shooting a bow, or waving and smoking. The correct class was usually still among the model’s top five choices, suggesting fine-grained semantic ambiguity rather than a complete failure to understand the clip.</p>
+        <p>Localisation failures were mainly categorical or spatial. Smaller actors were more difficult to localise accurately, while temporal-only failure was not the main bottleneck on JHMDB.</p>
+        <figure>
+          <img src="/images/action-recognition/localisation-summary.png" alt="Best and worst JHMDB action classes measured by frame mean average precision" width="1500" height="675" loading="lazy" />
+          <figcaption>Figure 4. Per-class variation in localisation performance. Source: project report.</figcaption>
+        </figure>
+      </section>
+
+      <section id="outcome" data-reveal>
+        <p class="kicker">05 / Outcome</p>
+        <h2>Good video features transfer—but localisation remains its own problem.</h2>
+        <p class="lead">The project connected systematic backbone selection with an end-to-end detection system and analysis of where each stage succeeds or fails.</p>
+        <p>VideoMAE offered the strongest practical foundation, but classification strength alone did not guarantee spatial precision. Fine-tuning, multi-level features and a temporally coherent tubelet representation were critical once the task moved from recognising an action to locating it.</p>
+      </section>
+    </article>
+  </div>
+
+  <section class="case-end">
+    <div class="shell">
+      <p class="kicker">Group project · University of Surrey</p>
+      <h2>From video classification to action localisation.</h2>
+      <a class="button" href="https://github.com/dd00697/Action-Recognition-Using-Vision-Transformers" target="_blank" rel="noreferrer">Explore the code <span aria-hidden="true">↗</span></a>
+    </div>
+  </section>
+</BaseLayout>
