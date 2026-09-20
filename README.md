@@ -1,6 +1,6 @@
-# Daniel Davis — portfolio
+# My portfolio
 
-A static portfolio built with Astro. It includes Daniel’s experience and education, the Lava-Prune MSc dissertation, and university projects covering video action recognition, statistical speech recognition, and vehicle re-identification.
+This is my static portfolio, built with Astro. It covers my experience and education, my Lava-Prune MSc dissertation, and university projects involving video action recognition, statistical speech recognition, and vehicle re-identification.
 
 ## Run locally
 
@@ -28,4 +28,4 @@ The static production site is written to `dist/` and can be deployed directly to
 - `/work/speech-recognition` — HMM speech recognition project
 - `/work/vehicle-reidentification` — vehicle image-retrieval project
 
-Project figures and numerical claims come from the corresponding dissertation and university reports.
+The project figures and numerical claims come from my dissertation and university reports.
