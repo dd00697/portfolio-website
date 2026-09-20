@@ -72,14 +72,10 @@ h1, h2 { font-family: var(--serif); }
 [data-reveal].is-visible { opacity: 1; transform: none; }
 
 .hero { padding: clamp(5rem, 10vw, 9rem) 0 5rem; }
-.hero-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(270px, .65fr); gap: clamp(3rem, 8vw, 8rem); align-items: end; }
+.hero-grid { display: grid; grid-template-columns: 1fr; }
 .hero h1 { max-width: 920px; margin: 1.4rem 0 1.8rem; font-size: clamp(4rem, 9.4vw, 8.8rem); letter-spacing: -.065em; }
 .hero h1 em { color: var(--orange); font-weight: 400; }
 .hero-intro { max-width: 680px; color: #434842; font-size: clamp(1rem, 1.5vw, 1.2rem); }
-.availability { padding: 1.6rem; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
-.availability .dot { display: inline-block; width: 8px; height: 8px; margin-right: .5rem; border-radius: 50%; background: #42a35e; box-shadow: 0 0 0 5px rgba(66,163,94,.13); }
-.availability strong { display: block; margin: 1.2rem 0 .35rem; font-family: var(--serif); font-size: 1.65rem; font-weight: 500; line-height: 1.1; }
-.availability p { color: var(--muted); font-size: .85rem; }
 
 .marquee { overflow: hidden; border-block: 1px solid var(--line); background: var(--ink); color: var(--paper); }
 .marquee-track { width: max-content; padding: .95rem 0; font: 400 .74rem var(--mono); letter-spacing: .14em; text-transform: uppercase; animation: drift 28s linear infinite; }
@@ -242,7 +238,6 @@ td:not(:first-child), th:not(:first-child) { text-align: right; }
   .hero-grid, .feature-card, .about-grid, .case-title-grid { grid-template-columns: 1fr; }
   .hero { padding-top: 4rem; }
   .hero h1 { font-size: clamp(4rem, 17vw, 7rem); }
-  .availability { max-width: 360px; }
   .feature-visual { min-height: 360px; }
   .timeline-item { grid-template-columns: 1fr; gap: .35rem; }
   .timeline-item > span { text-align: left; }
